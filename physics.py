@@ -1,3 +1,4 @@
+import pprint
 
 from pyfrc.physics import drivetrains
 
@@ -13,8 +14,9 @@ class PhysicsEngine:
         # print(hal_data)
         if self.initial:
             self.initial = False
-            for key in hal_data["CAN"].keys():
-                print(key)
+            pprint.pprint(hal_data["CAN"]["sparkmax-5"])
+            # for key in hal_data["sparkmax-5"].keys():
+            #     print(key)
         # Simulate the drivetrain
         lf_motor = hal_data["CAN"][4]["value"]
         lr_motor = hal_data["CAN"][1]["value"]

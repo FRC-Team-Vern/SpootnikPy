@@ -12,6 +12,8 @@ class RobotMap(object):
     MAST_2 = 9
     MAST_3 = 8
 
+    MAST = 5
+
     # Nom nom motors
     NOMNOM_1 = 5
     NOMNOM_2 = 6

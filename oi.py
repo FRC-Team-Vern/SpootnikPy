@@ -1,6 +1,7 @@
 from wpilib import XboxController
 from wpilib.joystick import Joystick
 from wpilib.buttons.joystickbutton import JoystickButton
+from wpilib.command import Command
 
 
 class OI(object):
@@ -11,12 +12,17 @@ class OI(object):
         self._cyController = Joystick(1)
 
         # Create Buttons
-        self._moveMastUpButton = JoystickButton(self._cyController, 8)
-        self._moveMastDownButton = JoystickButton(self._cyController, 9)
+        # self._moveMastUpButton = JoystickButton(self._cyController, 8)
+        # self._moveMastDownButton = JoystickButton(self._cyController, 9)
+
+        # Testing
+        self._moveMastUpButton = JoystickButton(self._driveJoy, 1)
+        self._moveMastDownButton = JoystickButton(self._driveJoy, 2)
 
         # Connect Buttons to Commands
-        # self._moveMastUpButton.whileHeld(Robot.mastyBoi.HoistTheColors())
-        # self._moveMastDownButton.whileHeld(Robot.mastyBoi.RetreiveTheColors())
+        mastyBoi = Command.getRobot().mastyBoi
+        self._moveMastUpButton.whileHeld(mastyBoi.HoistTheColors(mastyBoi))
+        self._moveMastDownButton.whileHeld(mastyBoi.RetrieveTheColors(mastyBoi))
 
     @property
     def driveJoy(self):
