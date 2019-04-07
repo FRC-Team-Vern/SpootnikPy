@@ -27,17 +27,3 @@ class OI(object):
     @property
     def driveJoy(self):
         return self._driveJoy
-
-
-# def getJoystick():
-#     """
-#     Assign commands to button actions, and publish your joysticks so you
-#     can read values from them later.
-#     """
-#
-#     cyController = Joystick(1)
-#
-#     trigger = JoystickButton(joystick, Joystick.ButtonType.kTrigger)
-#     trigger.whenPressed(Crash())
-#
-# return joystick

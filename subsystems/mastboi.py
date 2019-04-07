@@ -14,8 +14,8 @@ class MastBoi(Subsystem):
     This subsystem controls the Mast with a Neo motor.
     """
     BOTTOM_ENCODER_VALUE = 0.0
-    MIDDLE_ENCODER_VALUE = -68.0
-    TOP_ENCODER_VALUE = -136.0
+    MIDDLE_ENCODER_VALUE = 68.0
+    TOP_ENCODER_VALUE = 136.0
 
     def __init__(self):
         super().__init__("MastBoi")
@@ -93,7 +93,7 @@ class MastBoi(Subsystem):
             power = 0.6
             position = self._mastboi.encoder.getPosition()
             self.logger.info("position: {}".format(position))
-            if position > MastBoi.TOP_ENCODER_VALUE:
+            if position < MastBoi.TOP_ENCODER_VALUE:
                 self._mastboi.mastMotor.set(power)
             else:
                 self._mastboi.mastMotor.set(0.0)
@@ -119,7 +119,7 @@ class MastBoi(Subsystem):
         def execute(self):
             power = 0.1
             position = self._mastboi.encoder.getPosition()
-            if position < MastBoi.BOTTOM_ENCODER_VALUE:
+            if position > MastBoi.BOTTOM_ENCODER_VALUE:
                 self._mastboi.mastMotor.set(power)
             else:
                 self._mastboi.mastMotor.set(0.0)
