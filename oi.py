@@ -1,3 +1,4 @@
+from wpilib import XboxController
 from wpilib.joystick import Joystick
 from wpilib.buttons.joystickbutton import JoystickButton
 
@@ -6,7 +7,7 @@ class OI(object):
 
     def __init__(self):
         # Create Joysticks
-        self._driveJoy = Joystick(0)
+        self._driveJoy = XboxController(0)
         self._cyController = Joystick(1)
 
         # Create Buttons

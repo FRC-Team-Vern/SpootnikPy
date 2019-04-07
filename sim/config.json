@@ -1,0 +1,15 @@
+{
+  "pyfrc": {
+
+  	"robot": {
+  	  "w": 3,
+  	  "h": 3,
+
+      "start_positions": [
+            {"x": 2, "y": 17.75, "angle": 0, "name": "lower"},
+            {"x": 2, "y": 14, "angle": 0, "name": "middle"},
+            {"x": 2, "y": 10.25, "angle": 0, "name": "top"}
+        ]
+  	}
+  }
+}

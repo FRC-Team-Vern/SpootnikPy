@@ -5,6 +5,7 @@ from robotmap import RobotMap as RM
 from wpilib.drive import MecanumDrive
 from ctre.wpi_talonsrx import WPI_TalonSRX
 from ctre._impl.autogen.ctre_sim_enums import NeutralMode
+from wpilib.interfaces.generichid import GenericHID
 from wpilib.command import Command, TimedCommand
 
 
@@ -23,9 +24,9 @@ class SpootnikDrives(PIDSubsystem):
             motor.configOpenLoopRamp(1.4, 10)
             motor.setNeutralMode(NeutralMode.Brake)
 
-            # Invert left side motors
-            if i <= 1:
-                motor.setInverted(True)
+            # Invert left side motors?
+            # if i <= 1:
+            #     motor.setInverted(True)
 
             # Set up PIDSubsystem parameters
             self.setInputRange(0.0, 360.0)
@@ -39,6 +40,7 @@ class SpootnikDrives(PIDSubsystem):
         self.drive = MecanumDrive(*motors)
         self.drive.setExpiration(1)
         self.drive.setSafetyEnabled(False)
+        self.drive.setDeadband(0.1)
 
     def returnPIDInput(self):
         return 0.0
@@ -94,17 +96,21 @@ class SpootnikDrives(PIDSubsystem):
 
         def initialize(self):
             self.logger.info("initialize")
-            self._spootnikDrives.drivelyMoreBetterer(0.8, 0.0, 0.0, 0.0)
+            # self._spootnikDrives.drivelyMoreBetterer(0.8, 0.0, 0.0, 0.0)
+            self._spootnikDrives.drive.driveCartesian(0.0, 0.8, 0.0)
 
         def end(self):
             self.logger.info("end")
-            self._spootnikDrives.drivelyMoreBetterer(0.8, 0.0, 0.0, 0.0)
+            self._spootnikDrives.drive.driveCartesian(0.0, 0.0, 0.0)
 
 # Define support functions
 
     def driveCartesianWithJoy(self):
         joy = Command.getRobot().oi.driveJoy
-        self.drive.driveCartesian(joy.getX(), joy.getY(), joy.getZ())
+        ySpeed = joy.getX(GenericHID.Hand.kLeft)
+        xSpeed = -joy.getY(GenericHID.Hand.kLeft)
+        zRotation = joy.getX(GenericHID.Hand.kRight)
+        self.drive.driveCartesian(ySpeed, xSpeed, zRotation)
 
     def morpheusDrive(self):
         print("INFO: morpheusDrive currently unimplemented")
