@@ -23,3 +23,6 @@ class RobotMap(object):
 
     # Flipper motor
     FLIPPY_MOTOR = 10
+
+    # Cargo motor
+    CARGO_MOTOR = 6

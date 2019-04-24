@@ -26,18 +26,24 @@ class PhysicsEngine:
         rf_motor = -hal_data["CAN"][2]["value"]
         rr_motor = -hal_data["CAN"][3]["value"]
 
-        # Update sparkmax-5 position
-        current_position = hal_data["CAN"]["sparkmax-10"]["position"]
-        value = hal_data["CAN"]["sparkmax-10"]["value"]
+        # Control the flipper sparkmax-10 position
+        if False:
+            current_position = hal_data["CAN"]["sparkmax-10"]["position"]
+            value = hal_data["CAN"]["sparkmax-10"]["value"]
 
-        self.logger.info("Current position: {}".format(current_position))
-        self.logger.info("sparkmax-10 value: {}".format(value))
+            self.logger.info("Current position: {}".format(current_position))
+            self.logger.info("sparkmax-10 value: {}".format(value))
 
-        if current_position < 0:
-            gravity_factor = 0.25
-            hal_data["CAN"]["sparkmax-10"]["position"] = current_position + value + gravity_factor
-        else:
-            hal_data["CAN"]["sparkmax-10"]["position"] = current_position + value
+            if current_position < 0:
+                gravity_factor = 0.25
+                hal_data["CAN"]["sparkmax-10"]["position"] = current_position + value + gravity_factor
+            else:
+                hal_data["CAN"]["sparkmax-10"]["position"] = current_position + value
+
+        # Control the CargoEffector
+        if False:
+            cargo_effector_motor = hal_data["CAN"][6]["value"]
+            self.logger.info("CargoEffector value: {}".format(cargo_effector_motor))
 
         xSpeed, ySpeed, rotation = self.drivetrain.get_vector(lr_motor, rr_motor, lf_motor, rf_motor)
         self.physics_controller.vector_drive(xSpeed, ySpeed, rotation, tm_diff)
