@@ -8,6 +8,7 @@ from commandbased import CommandBasedRobot
 from commands.drivetobaseline import DriveToBaseLine
 from subsystems.spootnikdrives import SpootnikDrives
 from subsystems.mastboi import MastBoi
+from subsystems.flipper import Flipper
 from oi import OI
 
 
@@ -36,6 +37,7 @@ class SpootnikRobot(CommandBasedRobot):
 
         # Create subsystems
         self.mastyBoi = MastBoi()
+        self.suplex = Flipper()
         self.spootnikDrives = SpootnikDrives()
 
         # Autonomous commands

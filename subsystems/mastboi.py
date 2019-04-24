@@ -1,8 +1,7 @@
 import enum
 import logging
 
-from rev import CANSparkMax
-from rev._impl.autogen.sim_enums import MotorType, ControlType
+from rev import CANSparkMax, MotorType
 from wpilib.command.subsystem import Subsystem
 from wpilib.command import Command
 

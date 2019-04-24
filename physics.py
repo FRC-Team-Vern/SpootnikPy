@@ -1,4 +1,5 @@
 import pprint
+import logging
 
 from pyfrc.physics import drivetrains
 
@@ -6,6 +7,7 @@ from pyfrc.physics import drivetrains
 class PhysicsEngine:
 
     def __init__(self, physics_controller):
+        self.logger = logging.getLogger("PhysicsEngine")
         self.physics_controller = physics_controller
         self.drivetrain = drivetrains.MecanumDrivetrain()
         self.initial = True
@@ -25,13 +27,17 @@ class PhysicsEngine:
         rr_motor = -hal_data["CAN"][3]["value"]
 
         # Update sparkmax-5 position
-        current_position = hal_data["CAN"]["sparkmax-5"]["position"]
-        if current_position >= 0:
-            self.simulated_position += (hal_data["CAN"]["sparkmax-5"]["value"] - 0.2)
-            hal_data["CAN"]["sparkmax-5"]["position"] = self.simulated_position
+        current_position = hal_data["CAN"]["sparkmax-10"]["position"]
+        value = hal_data["CAN"]["sparkmax-10"]["value"]
+
+        self.logger.info("Current position: {}".format(current_position))
+        self.logger.info("sparkmax-10 value: {}".format(value))
+
+        if current_position < 0:
+            gravity_factor = 0.25
+            hal_data["CAN"]["sparkmax-10"]["position"] = current_position + value + gravity_factor
         else:
-            self.simulated_position = 0.0
-            hal_data["CAN"]["sparkmax-5"]["position"] = self.simulated_position
+            hal_data["CAN"]["sparkmax-10"]["position"] = current_position + value
 
         xSpeed, ySpeed, rotation = self.drivetrain.get_vector(lr_motor, rr_motor, lf_motor, rf_motor)
         self.physics_controller.vector_drive(xSpeed, ySpeed, rotation, tm_diff)
