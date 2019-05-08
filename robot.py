@@ -9,6 +9,7 @@ from commands.drivetobaseline import DriveToBaseLine
 from subsystems.spootnikdrives import SpootnikDrives
 from subsystems.mastboi import MastBoi
 from subsystems.flipper import Flipper
+from subsystems.hatch_effector import HatchEffector
 from subsystems.cargo_effector import CargoEffector
 from oi import OI
 
@@ -40,6 +41,7 @@ class SpootnikRobot(CommandBasedRobot):
         self.mastyBoi = MastBoi()
         self.suplex = Flipper()
         self.spootnikDrives = SpootnikDrives()
+        self.hatchEffector = HatchEffector()
         self.cargoEffector = CargoEffector()
 
         # Autonomous commands

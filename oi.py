@@ -14,14 +14,25 @@ class OI(object):
         self._cyController = Joystick(1)
 
         # Create Buttons
+        self._blastenTheHatches = JoystickButton(self._driveJoy, 2)
+        self._servoOpen = JoystickButton(self._driveJoy, 4)
+        self._servoHalf = JoystickButton(self._driveJoy, 3)
+        self._servoClose = JoystickButton(self._driveJoy, 1)
+
         self._suplexButton = JoystickButton(self._driveJoy, 8)
         self._backButton = JoystickButton(self._driveJoy, 7)
 
         # Testing
-        self._moveMastUpButton = JoystickButton(self._driveJoy, 1)
-        self._moveMastDownButton = JoystickButton(self._driveJoy, 2)
+        self._moveMastUpButton = JoystickButton(self._cyController, 8)
+        self._moveMastDownButton = JoystickButton(self._cyController, 9)
 
         # Connect Buttons to Commands
+        hatchEffector = Command.getRobot().hatchEffector
+        self._blastenTheHatches.whileHeld(hatchEffector.ShootThePanel(hatchEffector))
+        self._servoOpen.whileHeld(hatchEffector.ServoOpen(hatchEffector))
+        self._servoHalf.whileHeld(hatchEffector.ServoHalf(hatchEffector))
+        self._servoClose.whileHeld(hatchEffector.ServoClose(hatchEffector))
+
         suplex = Command.getRobot().suplex
         self._suplexButton.whileHeld(suplex.Smash(suplex, Flipper.FlipDirection.UP))
         self._backButton.whileHeld(suplex.Smash(suplex, Flipper.FlipDirection.DOWN))
