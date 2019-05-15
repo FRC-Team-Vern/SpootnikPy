@@ -1,3 +1,4 @@
+from wpilib.command import CommandGroup
 from wpilib.command.subsystem import Subsystem
 from wpilib.command.command import Command
 from wpilib.command.instantcommand import InstantCommand
@@ -49,3 +50,10 @@ class HatchEffector(Subsystem):
 
         def end(self):
             self._hatch_effector.solenoid.set(DoubleSolenoid.Value.kReverse)
+
+    class ParallelShoot(CommandGroup):
+        def __init__(self, hatch_effector):
+            super().__init__()
+            self._hatch_effector = hatch_effector
+            self.addSequential(hatch_effector.ServoOpen(), 0.25)
+            self.addSequential(hatch_effector.ShootThePanel())
