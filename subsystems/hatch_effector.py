@@ -54,6 +54,5 @@ class HatchEffector(Subsystem):
     class ParallelShoot(CommandGroup):
         def __init__(self, hatch_effector):
             super().__init__()
-            self._hatch_effector = hatch_effector
-            self.addSequential(hatch_effector.ServoOpen(), 0.25)
-            self.addSequential(hatch_effector.ShootThePanel())
+            self.addSequential(hatch_effector.ServoOpen(hatch_effector), 0.25)
+            self.addSequential(hatch_effector.ShootThePanel(hatch_effector))

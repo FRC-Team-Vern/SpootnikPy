@@ -28,7 +28,7 @@ class OI(object):
 
         # Connect Buttons to Commands
         hatchEffector = Command.getRobot().hatchEffector
-        self._blastenTheHatches.whileHeld(hatchEffector.ShootThePanel(hatchEffector))
+        self._blastenTheHatches.whileHeld(hatchEffector.ParallelShoot(hatchEffector))
         self._servoOpen.whileHeld(hatchEffector.ServoOpen(hatchEffector))
         self._servoHalf.whileHeld(hatchEffector.ServoHalf(hatchEffector))
         self._servoClose.whileHeld(hatchEffector.ServoClose(hatchEffector))
