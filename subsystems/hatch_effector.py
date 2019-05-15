@@ -5,7 +5,7 @@ from wpilib.command.instantcommand import InstantCommand
 from wpilib.doublesolenoid import DoubleSolenoid
 from wpilib.servo import Servo
 
-
+#Desperate message
 class HatchEffector(Subsystem):
 
     def __init__(self):
