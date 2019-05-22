@@ -49,8 +49,8 @@ class CargoEffector(Subsystem):
             left_trigger = self.apply_deadband(left_trigger)
             right_trigger = self.apply_deadband(right_trigger)
 
-            self.logger.info("Left trigger: {}".format(left_trigger))
-            self.logger.info("Right trigger: {}".format(right_trigger))
+            # self.logger.info("Left trigger: {}".format(left_trigger))
+            # self.logger.info("Right trigger: {}".format(right_trigger))
 
             if left_trigger > 0:
                 self._cargo_effector.cargo_motor.set(left_trigger)
