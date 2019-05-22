@@ -1,10 +1,10 @@
-import logging
 import enum
 
-from wpilib.command.subsystem import Subsystem
-from robotmap import RobotMap as RM
 from rev import CANSparkMax, MotorType
 from wpilib.command import Command
+from wpilib.command.subsystem import Subsystem
+
+from robotmap import RobotMap as RM
 
 
 class Flipper(Subsystem):
