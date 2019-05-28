@@ -2,6 +2,7 @@ import pprint
 import logging
 
 from pyfrc.physics import drivetrains
+from pyfrc.sim import get_user_renderer
 
 
 class PhysicsEngine:
@@ -12,12 +13,14 @@ class PhysicsEngine:
         self.drivetrain = drivetrains.MecanumDrivetrain()
         self.initial = True
         self.simulated_position = 0.0
+        self.user_renderer = get_user_renderer()
+        # self.global_field = self.user_renderer._global_ui.field
 
     def update_sim(self, hal_data, now, tm_diff):
         # print(hal_data)
-        if self.initial:
-            self.initial = False
-            pprint.pprint(hal_data["CAN"]["sparkmax-5"])
+        # if self.initial:
+        #     self.initial = False
+        #     pprint.pprint(hal_data["CAN"]["sparkmax-5"])
             # for key in hal_data["sparkmax-5"].keys():
             #     print(key)
         # Simulate the drivetrain
