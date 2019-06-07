@@ -27,16 +27,15 @@ def extractPathsFromSVG(input_filename):
 
         _, _, color = style.split(";")[0].partition(":")
         # prev_pt, object_pts = parse_pts(d, prev_pt, width_ratio, height_ratio, transform)
-        object_pts = parse_pts(d, width_ratio, height_ratio, transform)
-        # if id == 'left_wheel':
-        #     rounded_object_pts = [(round(pt[0], 3), round(pt[1], 3)) for pt in object_pts]
-        #     print(f"left_wheel pts: {rounded_object_pts}")
-        paths_as_points[id] = (color, [(round(pt[0], 3), round(pt[1], 3)) for pt in object_pts])
+        object_pts = parse_pts(d, width_ratio, height_ratio, transform, precision=3)
+        if id == 'rear_wheel':
+            print(f"left_wheel pts: {object_pts}")
+        paths_as_points[id] = (color, object_pts)
 
     return paths_as_points
 
 
-def parse_pts(d, width_ratio, height_ratio, transform):
+def parse_pts(d, width_ratio, height_ratio, transform, precision):
     pts = []
     d_split = d.split()
     i = 0
@@ -69,17 +68,26 @@ def parse_pts(d, width_ratio, height_ratio, transform):
             prev_x, prev_y = (prev_x / width_ratio) - transform[0], (prev_y / height_ratio) - transform[1]
             dy = float(d_split[i])
             x, y = prev_x, prev_y + dy
+        elif move_type == "L":
+            x, y = [float(coord) for coord in d_split[i].split(',')]
+        elif move_type == "l":
+            prev_x, prev_y = (prev_x / width_ratio) - transform[0], (prev_y / height_ratio) - transform[1]
+            dx, dy = [float(coord) for coord in d_split[i].split(',')]
+            x, y = prev_x + dx, prev_y + dy
         elif move_type.upper() == "Z":
             # We don't need to close paths in tkinter, but we do need to pass them on for relative moves in SVG
             x, y = (first_pt[0] / width_ratio) - transform[0], (first_pt[1] / height_ratio) - transform[1]
         else:
             i -= 1
-            coords = [float(t) for t in d_split[i].split(',')]
+            try:
+                coords = [float(t) for t in d_split[i].split(',')]
+            except Exception as e:
+                raise e
             if len(coords) == 2:
-                if prev_move_type == "M":
+                if prev_move_type == "M" or prev_move_type == "L":
                     x, y = coords
                     move_type = prev_move_type
-                elif prev_move_type == "m":
+                elif prev_move_type == "m"  or prev_move_type == "l":
                     dx, dy = coords
                     x, y = (prev_x / width_ratio) - transform[0] + dx, (prev_y / height_ratio) - transform[1] + dy
                     move_type = prev_move_type
@@ -97,7 +105,7 @@ def parse_pts(d, width_ratio, height_ratio, transform):
             first_pt = pt
 
         if move_type.upper() != "Z":
-            pts.append(pt)
+            pts.append((round(pt[0], precision), round(pt[1], precision)))
 
         prev_move_type = move_type
 
@@ -115,8 +123,6 @@ def convertExtractPtsToPx(extracted_pts, px_to_ft_conv):
 
 
 def pathsPtsAsObjectJson(path_pts):
-    # {"color": "#888", "points": [(0, 15), (40, 5)],
-    #  {"color": "blue", "points": [(0, 15), (40, 5)]
     json_strs = []
     for id, path_info in path_pts.items():
         color, pts = path_info
