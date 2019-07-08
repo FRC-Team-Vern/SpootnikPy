@@ -10,6 +10,8 @@ class PhysicsEngine:
     def __init__(self, physics_controller):
         self.logger = logging.getLogger("PhysicsEngine")
         self.physics_controller = physics_controller
+        self.sim_type = self.physics_controller.config_obj["pyfrc"]["sim_type"]
+        self.logger.info(f"Simulation type: {self.sim_type}")
         self.drivetrain = drivetrains.MecanumDrivetrain()
         self.initial = True
         self.simulated_position = 0.0
