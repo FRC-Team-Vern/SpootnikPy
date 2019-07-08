@@ -52,3 +52,5 @@ class PhysicsEngine:
 
         xSpeed, ySpeed, rotation = self.drivetrain.get_vector(lr_motor, rr_motor, lf_motor, rf_motor)
         self.physics_controller.vector_drive(xSpeed, ySpeed, rotation, tm_diff)
+        self.physics_controller.update_element_position("left_wheel", 0.5, 0.5, 0.0)
+        self.physics_controller.update_element_position("right_wheel", 0.5, -0.5, 0.0)

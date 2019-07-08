@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+import numpy as np
 
 
 def extractPathsFromSVG(input_filename):
@@ -120,11 +121,20 @@ def pathsPtsAsObjectJson(path_pts):
     json_strs = []
     for id, path_info in path_pts.items():
         color, pts = path_info
+        centroid_x, centroid_y = calcCentroid(pts)
         pts_str = "[" + ", ".join([f"[{pt[0]}, {pt[1]}]" for pt in pts]) + "]"
-        json_str = f"{{\"color\": \"{color}\", \"points\": {pts_str}}}"
+        json_str = f'{{"color": "{color}", "center": [{centroid_x:.03f}, {centroid_y:.03f}], "points": {pts_str}}}'
         json_strs.append(json_str)
 
     return json_strs
+
+
+def calcCentroid(pts):
+    arr = np.array(pts)
+    length = arr.shape[0]
+    sum_x = np.sum(arr[:, 0])
+    sum_y = np.sum(arr[:, 1])
+    return sum_x / length, sum_y / length
 
 
 if __name__ == '__main__':
