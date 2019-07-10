@@ -115,7 +115,7 @@ class SpootnikDrives(PIDSubsystem):
     def morpheusDrive(self):
         print("INFO: morpheusDrive currently unimplemented")
 
-    def fieldOrientedDrive(self):
+#    def fieldOrientedDrive(self):
         # lx = Command.getRobot().jml.getLX()
         # ly = -Command.getRobot().jml.getLY()
         # rx = Command.getRobot().jml.getRX()
