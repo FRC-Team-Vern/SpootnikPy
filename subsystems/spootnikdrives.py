@@ -51,7 +51,7 @@ class SpootnikDrives(PIDSubsystem):
     def initDefaultCommand(self):
         self.setDefaultCommand(self.DriveWithJoy(self))
 
-# Define commands
+    # Define commands
 
     class DriveWithJoy(Command):
 
@@ -103,7 +103,7 @@ class SpootnikDrives(PIDSubsystem):
             self.logger.info("end")
             self._spootnikDrives.drive.driveCartesian(0.0, 0.0, 0.0)
 
-# Define support functions
+    # Define support functions
 
     def driveCartesianWithJoy(self):
         joy = Command.getRobot().oi.driveJoy
@@ -115,7 +115,7 @@ class SpootnikDrives(PIDSubsystem):
     def morpheusDrive(self):
         print("INFO: morpheusDrive currently unimplemented")
 
-#    def fieldOrientedDrive(self):
+        #    def fieldOrientedDrive(self):
         # lx = Command.getRobot().jml.getLX()
         # ly = -Command.getRobot().jml.getLY()
         # rx = Command.getRobot().jml.getRX()

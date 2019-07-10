@@ -1,4 +1,3 @@
-
 import wpilib
 import enum
 
@@ -22,6 +21,7 @@ class SpootnikRobot(CommandBasedRobot):
     will automatically call the scheduler. You may override the "init" functions
     if you want to do anything special when the mode changes.
     """
+
     def robotInit(self):
         """
         This is a good place to set up your subsystems and anything else that
@@ -62,7 +62,7 @@ class SpootnikRobot(CommandBasedRobot):
         """
         self.autonomousCommand.start()
 
-# Define Enums
+    # Define Enums
 
     class DriveSwitcher(enum.IntEnum):
         MORPHEUS = 0
