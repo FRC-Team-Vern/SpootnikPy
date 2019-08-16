@@ -50,7 +50,9 @@ class PhysicsEngine:
             cargo_effector_motor = hal_data["CAN"][6]["value"]
             self.logger.info("CargoEffector value: {}".format(cargo_effector_motor))
 
-        xSpeed, ySpeed, rotation = self.drivetrain.get_vector(lr_motor, rr_motor, lf_motor, rf_motor)
-        self.physics_controller.vector_drive(xSpeed, ySpeed, rotation, tm_diff)
-        self.physics_controller.update_element_position("left_wheel", 0.5, 0.5, 0.0)
-        self.physics_controller.update_element_position("right_wheel", 0.5, -0.5, 0.0)
+        if self.sim_type == "top":
+            xSpeed, ySpeed, rotation = self.drivetrain.get_vector(lr_motor, rr_motor, lf_motor, rf_motor)
+            self.physics_controller.vector_drive(xSpeed, ySpeed, rotation, tm_diff)
+        elif self.sim_type == "profile":
+            self.physics_controller.update_element_position("rear_wheel", 0.5, 0.5, 0.0)
+            self.physics_controller.update_element_position("front_wheel", 0.5, -0.5, 0.0)
