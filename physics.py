@@ -1,4 +1,4 @@
-# import pprint
+import pprint
 import logging
 
 from pyfrc.physics import drivetrains
@@ -8,6 +8,8 @@ from Box2D import b2World, b2PolygonShape
 
 
 class PhysicsEngine:
+
+    FT_TO_METER_CONV = 0.3048
 
     def __init__(self, physics_controller):
         self.logger = logging.getLogger("PhysicsEngine")
@@ -24,6 +26,8 @@ class PhysicsEngine:
         self.field_height = None
         self.ground = None
         self.robot_body = None
+        self.rear_wheel = None
+        self.front_wheel = None
         self.vel_iters = 6
         self.pos_iters = 2
 
@@ -33,11 +37,12 @@ class PhysicsEngine:
 
             self.world = b2World()  # default gravity is (0,-10) and doSleep is True
             try:
-                config_objects = self.physics_controller.config_obj["pyfrc"]["profile"]["field"]["objects"]
+                config_field_objects = self.physics_controller.config_obj["pyfrc"]["profile"]["field"]["objects"]
+                config_robot_objects = self.physics_controller.config_obj["pyfrc"]["profile"]["robot"]["objects"]
             except KeyError:
-                config_objects = []
+                config_field_objects = []
 
-            ground_config_object = next((obj for obj in config_objects if "name" in obj and obj["name"] == "ground"),
+            ground_config_object = next((obj for obj in config_field_objects if "name" in obj and obj["name"] == "ground"),
                                         None)
             if ground_config_object:
                 ground_center_x, ground_center_y, ground_width, ground_height = \
@@ -52,11 +57,28 @@ class PhysicsEngine:
             # Add a box fixture to the robot body
             self.robot_body.CreatePolygonFixture(box=(1, 1), density=1, friction=0.3)
 
+            rear_wheel_object = next((obj for obj in config_robot_objects if "name" in obj and obj["name"] == "rear_wheel"),
+                                     None)
+            front_wheel_object = next((obj for obj in config_robot_objects if "name" in obj and obj["name"] == "front_wheel"),
+                                      None)
+
+            # Only create wheels if both objects exist
+            if rear_wheel_object and front_wheel_object:
+                rear_wheel_center = self.convertConfigToBox2DCoords(rear_wheel_object["center"])
+                self.rear_wheel = self.world.CreateDynamicBody(position=rear_wheel_center)
+                rear_wheel_points = [self.convertConfigToBox2DCoords(pt) for pt in rear_wheel_object["points"]]
+                self.rear_wheel.CreatePolygonFixture(vertices=rear_wheel_points)
+                front_wheel_center = self.convertConfigToBox2DCoords(front_wheel_object["center"])
+                self.front_wheel = self.world.CreateDynamicBody(position=front_wheel_center)
+                front_wheel_points = [self.convertConfigToBox2DCoords(pt) for pt in front_wheel_object["points"]]
+                self.front_wheel.CreatePolygonFixture(vertices=front_wheel_points)
+
     def update_sim(self, hal_data, now, tm_diff):
         # print(hal_data)
-        # if self.initial:
-        #     self.initial = False
-        #     pprint.pprint(hal_data["CAN"]["sparkmax-5"])
+        if self.initial:
+            self.initial = False
+            # pprint.pprint(hal_data["CAN"]["sparkmax-5"])
+            pprint.pprint(hal_data)
             # for key in hal_data["sparkmax-5"].keys():
             #     print(key)
         # Simulate the drivetrain
@@ -89,15 +111,23 @@ class PhysicsEngine:
             self.physics_controller.vector_drive(xSpeed, ySpeed, rotation, tm_diff)
 
         elif self.sim_type == "profile":
-            self.world.Step(tm_diff, self.vel_iters, self.pos_iters)
+            print(f"User Program State: {hal_data['user_program_state']}")
+            if hal_data['user_program_state'] == "teleop":
+                self.world.Step(tm_diff, self.vel_iters, self.pos_iters)
 
-            # Clear applied body forced. We didn't apply any forced, but you should know about this function.
-            self.world.ClearForces()
+                # Clear applied body forced. We didn't apply any forced, but you should know about this function.
+                self.world.ClearForces()
 
-            self.logger.info(f"Position: {self.robot_body.position}, Angle: {self.robot_body.angle}")
+                self.logger.info(f"Position: {self.robot_body.position}, Angle: {self.robot_body.angle}")
+                self.logger.info(f"Rear Position: {self.rear_wheel.position}")
+                self.logger.info(f"Front Position: {self.front_wheel.position}")
 
-            self.physics_controller.update_element_position("rear_wheel", 0.5, 0.5, 0.0)
-            self.physics_controller.update_element_position("front_wheel", 0.5, -0.5, 0.0)
+                rear_wheel_x, rear_wheel_y = self.convertConfigToBox2DCoords((self.rear_wheel.position.x,
+                                                                              self.rear_wheel.position.y))
+                front_wheel_x, front_wheel_y = self.convertConfigToBox2DCoords((self.front_wheel.position.x,
+                                                                                self.front_wheel.position.y))
+                self.physics_controller.update_element_position("rear_wheel", rear_wheel_x, rear_wheel_y, 0.0)
+                self.physics_controller.update_element_position("front_wheel", front_wheel_x, front_wheel_y, 0.0)
 
     def convertConfigToBox2DBox(self, config_box_object):
         assert "points" in config_box_object and len(config_box_object["points"]) == 4, \
