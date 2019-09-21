@@ -48,8 +48,9 @@ class PhysicsEngine:
             except KeyError:
                 config_field_objects = []
 
-            ground_config_object = next((obj for obj in config_field_objects if "name" in obj and obj["name"] == "ground"),
-                                        None)
+            ground_config_object = next((obj for obj in config_field_objects
+                                         if "name" in obj and obj["name"] == "ground"), None)
+
             if ground_config_object:
                 ground_center_x, ground_center_y, ground_width, ground_height = \
                     PhysicsEngine.convertObjectCoordsTo2DBox(ground_config_object)
@@ -68,20 +69,16 @@ class PhysicsEngine:
             self.robot_body.CreatePolygonFixture(box=(robot_config["w"] * 0.5, robot_config["h"] * 0.5), density=1,
                                                  friction=0.3)
 
-            rear_wheel_object = next((obj for obj in config_robot_objects if "name" in obj and obj["name"] == "rear_wheel"),
-                                     None)
-            front_wheel_object = next((obj for obj in config_robot_objects if "name" in obj and obj["name"] == "front_wheel"),
-                                      None)
+            rear_wheel_object = next((obj for obj in config_robot_objects
+                                      if "name" in obj and obj["name"] == "rear_wheel"), None)
+            front_wheel_object = next((obj for obj in config_robot_objects
+                                       if "name" in obj and obj["name"] == "front_wheel"), None)
 
             # Only create wheels if both objects exist
             if rear_wheel_object and front_wheel_object:
-                # rear_wheel_center = self.convertConfigToBox2DCoords(rear_wheel_object["center"])
                 self.rear_wheel = self.world.CreateDynamicBody(position=rear_wheel_object["center"])
-                # rear_wheel_points = [self.convertConfigToBox2DCoords(pt) for pt in rear_wheel_object["points"]]
                 self.rear_wheel.CreatePolygonFixture(vertices=rear_wheel_object["points"])
-                # front_wheel_center = self.convertConfigToBox2DCoords(front_wheel_object["center"])
                 self.front_wheel = self.world.CreateDynamicBody(position=front_wheel_object["center"])
-                # front_wheel_points = [self.convertConfigToBox2DCoords(pt) for pt in front_wheel_object["points"]]
                 self.front_wheel.CreatePolygonFixture(vertices=front_wheel_object["points"])
 
     def update_sim(self, hal_data, now, tm_diff):
@@ -122,14 +119,14 @@ class PhysicsEngine:
             self.physics_controller.vector_drive(xSpeed, ySpeed, rotation, tm_diff)
 
         elif self.sim_type == "profile":
-            print(f"User Program State: {hal_data['user_program_state']}")
+            # print(f"User Program State: {hal_data['user_program_state']}")
             if hal_data['user_program_state'] == "teleop":
                 self.world.Step(tm_diff, self.vel_iters, self.pos_iters)
 
                 # Clear applied body forced. We didn't apply any forced, but you should know about this function.
                 self.world.ClearForces()
 
-                self.logger.info(f"Position: {self.robot_body.position}, Angle: {self.robot_body.angle}")
+                # self.logger.info(f"Position: {self.robot_body.position}, Angle: {self.robot_body.angle}")
 
                 self.physics_controller.distance_drive(self.robot_body.position.x - self.prev_x_pos,
                                                        self.robot_body.position.y - self.prev_y_pos,
@@ -138,18 +135,6 @@ class PhysicsEngine:
                 self.prev_x_pos = self.robot_body.position.x
                 self.prev_y_pos = self.robot_body.position.y
                 self.prev_angle = self.robot_body.angle
-
-                # self.logger.info(f"Rear Position: {self.rear_wheel.position}")
-                # self.logger.info(f"Front Position: {self.front_wheel.position}")
-
-                # rear_wheel_x, rear_wheel_y = self.convertBox2DToTkinterCoords((self.rear_wheel.position.x,
-                #                                                                self.rear_wheel.position.y))
-                # front_wheel_x, front_wheel_y = self.convertBox2DToTkinterCoords((self.front_wheel.position.x,
-                #                                                                  self.front_wheel.position.y))
-                # self.physics_controller.update_element_position("rear_wheel", self.rear_wheel.position.x,
-                #                                                 self.rear_wheel.position.y, 0.0)
-                # self.physics_controller.update_element_position("front_wheel", self.front_wheel.position.x,
-                #                                                 self.front_wheel.position.y, 0.0)
 
     @staticmethod
     def convertObjectCoordsTo2DBox(config_box_object):
@@ -168,9 +153,3 @@ class PhysicsEngine:
             center_y = (ul[1] + ll[1]) * 0.5
 
         return center_x, center_y, box2d_width, box2d_height
-
-    # def convertTkinterToBox2DCoords(self, pt):
-    #     return pt[0], self.field_height - pt[1]
-    #
-    # def convertBox2DToTkinterCoords(self, pt):
-    #     return pt[0] * self.px_per_ft, (self.field_height - pt[1]) * self.px_per_ft
