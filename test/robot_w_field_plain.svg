@@ -13,7 +13,7 @@
    height="200"
    width="400"
    sodipodi:docname="robot_w_field_plain.svg"
-   inkscape:version="0.92.1 r15371">
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -24,14 +24,14 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:window-width="1920"
-     inkscape:window-height="1017"
+     inkscape:window-height="1001"
      id="namedview4498"
      showgrid="false"
-     inkscape:zoom="42.499894"
-     inkscape:cx="21.238309"
-     inkscape:cy="55.837953"
-     inkscape:window-x="1912"
-     inkscape:window-y="5"
+     inkscape:zoom="2.1024493"
+     inkscape:cx="196.74423"
+     inkscape:cy="123.05151"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg8" />
   <defs
@@ -74,7 +74,7 @@
      id="rear_wheel"
      sodipodi:sides="16"
      sodipodi:cx="7.9375"
-     sodipodi:cy="35.71875"
+     sodipodi:cy="38.364584"
      sodipodi:r1="1.3256623"
      sodipodi:r2="1.3093411"
      sodipodi:arg1="1.1137276"
@@ -82,7 +82,7 @@
      inkscape:flatsided="true"
      inkscape:rounded="0"
      inkscape:randomized="0"
-     d="m 8.5225408,36.908333 -0.4997673,0.133334 -0.5127494,-0.06807 -0.4476701,-0.259108 -0.314437,-0.4107 -0.1333338,-0.499768 0.068068,-0.512749 0.2591076,-0.44767 0.4107001,-0.314437 0.4997673,-0.133334 0.5127494,0.06807 0.4476701,0.259108 0.314437,0.4107 0.1333338,0.499768 -0.068068,0.512749 -0.2591076,0.44767 z"
+     d="m 8.5225408,39.554169 -0.4997673,0.133334 -0.5127494,-0.06807 -0.4476701,-0.259107 -0.314437,-0.4107 -0.1333338,-0.499768 0.068068,-0.512749 0.2591076,-0.44767 0.4107001,-0.314437 0.4997673,-0.133334 0.5127494,0.06807 0.4476701,0.259108 0.314437,0.4107 0.1333338,0.499767 -0.068068,0.51275 -0.2591076,0.44767 z"
      inkscape:label="#path4518" />
   <path
      inkscape:label="#path4518"

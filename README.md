@@ -7,6 +7,14 @@ Repository for Destination Deep Space competition redone in Python.
 
 https://github.com/robotpy/examples
 
+**Setup for box2d-py**
+
+(Preferably within a conda environment)
+
+pip install pygame\
+conda install swig\
+pip install box2d-py
+
 **Simulation:**
 
 python robot.py sim
