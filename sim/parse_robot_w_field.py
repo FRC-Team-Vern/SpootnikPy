@@ -26,7 +26,12 @@ def extractPathsFromSVG(input_filename):
     for child in root.iter('{http://www.w3.org/2000/svg}path'):
         id, d, style = [child.attrib[key] for key in ['id', 'd', 'style']]
 
-        _, _, color = style.split(";")[0].partition(":")
+        for style in style.split(";"):
+            name, val = style.split(":")
+            if name == "fill":
+                color = val
+                break
+
         # prev_pt, object_pts = parse_pts(d, prev_pt, width_ratio, height_ratio, transform)
         object_pts = parse_pts(d, width_ratio, height_ratio, transform)
         # if id == 'left_wheel':
@@ -105,11 +110,11 @@ def parse_pts(d, width_ratio, height_ratio, transform):
     return pts
 
 
-def convertExtractPtsToPx(extracted_pts, px_to_ft_conv):
+def convertExtractPtsToPx(extracted_pts, px_to_ft_conv, svg_height):
     scaled_extracted_pts = {}
     for id, extracted in extracted_pts.items():
         color, pts = extracted
-        new_extracted = [(round(pt[0] * px_to_ft_conv, 3), round(pt[1] * px_to_ft_conv, 3)) for pt in pts]
+        new_extracted = [(round(pt[0] * px_to_ft_conv, 3), round((svg_height - pt[1]) * px_to_ft_conv, 3)) for pt in pts]
         scaled_extracted_pts[id] = (color, new_extracted)
 
     return scaled_extracted_pts
@@ -123,7 +128,7 @@ def pathsPtsAsObjectJson(path_pts):
         color, pts = path_info
         centroid_x, centroid_y = calcCentroid(pts)
         pts_str = "[" + ", ".join([f"[{pt[0]}, {pt[1]}]" for pt in pts]) + "]"
-        json_str = f'{{"color": "{color}", "center": [{centroid_x:.03f}, {centroid_y:.03f}], "points": {pts_str}}}'
+        json_str = f'{{"name": "{id}", "color": "{color}", "center": [{centroid_x:.03f}, {centroid_y:.03f}], "points": {pts_str}}}'
         json_strs.append(json_str)
 
     return json_strs
@@ -145,7 +150,8 @@ if __name__ == '__main__':
 
     # Final points need to be in "feet" units.
     px_to_ft_conv = 0.1
-    extracted_pts = convertExtractPtsToPx(extracted_pts, px_to_ft_conv)
+    svg_height = 200
+    extracted_pts = convertExtractPtsToPx(extracted_pts, px_to_ft_conv, svg_height)
 
     object_paths_as_json = pathsPtsAsObjectJson(extracted_pts)
 

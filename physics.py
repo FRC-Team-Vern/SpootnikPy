@@ -32,6 +32,12 @@ class PhysicsEngine:
         self.prev_x_pos = None
         self.prev_y_pos = None
         self.prev_angle = 0
+        self.prev_front_wheel_x_pos = None
+        self.prev_front_wheel_y_pos = None
+        self.prev_front_wheel_angle = 0
+        self.prev_rear_wheel_x_pos = None
+        self.prev_rear_wheel_y_pos = None
+        self.prev_rear_wheel_angle = 0
         self.vel_iters = 6
         self.pos_iters = 2
 
@@ -77,9 +83,15 @@ class PhysicsEngine:
             # Only create wheels if both objects exist
             if rear_wheel_object and front_wheel_object:
                 self.rear_wheel = self.world.CreateDynamicBody(position=rear_wheel_object["center"])
-                self.rear_wheel.CreatePolygonFixture(vertices=rear_wheel_object["points"])
+                # self.rear_wheel.CreatePolygonFixture(vertices=rear_wheel_object["points"], density=1)
+                self.rear_wheel.CreatePolygonFixture(vertices=[(-0.5, 0.5), (-0.5, -0.5), (0.5, -0.5), (0.5, 0.5)], density=1, friction=0.3)
+                self.prev_rear_wheel_x_pos = rear_wheel_object["center"][0]
+                self.prev_rear_wheel_y_pos = rear_wheel_object["center"][1]
                 self.front_wheel = self.world.CreateDynamicBody(position=front_wheel_object["center"])
-                self.front_wheel.CreatePolygonFixture(vertices=front_wheel_object["points"])
+                # self.front_wheel.CreatePolygonFixture(vertices=front_wheel_object["points"], density=1)
+                self.front_wheel.CreatePolygonFixture(vertices=[(-0.5, 0.5), (-0.5, -0.5), (0.5, -0.5), (0.5, 0.5)], density=1)
+                self.prev_front_wheel_x_pos = front_wheel_object["center"][0]
+                self.prev_front_wheel_y_pos = front_wheel_object["center"][1]
 
     def update_sim(self, hal_data, now, tm_diff):
         # # print(hal_data)
@@ -131,10 +143,30 @@ class PhysicsEngine:
                 self.physics_controller.distance_drive(self.robot_body.position.x - self.prev_x_pos,
                                                        self.robot_body.position.y - self.prev_y_pos,
                                                        self.robot_body.angle - self.prev_angle)
-
                 self.prev_x_pos = self.robot_body.position.x
                 self.prev_y_pos = self.robot_body.position.y
                 self.prev_angle = self.robot_body.angle
+                
+                if self.front_wheel:
+                    # print(f"Front wheel: {self.front_wheel.position}")
+                    self.physics_controller.update_element_position("front_wheel",
+                                                                    self.front_wheel.position.x - self.prev_front_wheel_x_pos,
+                                                                    self.front_wheel.position.y - self.prev_front_wheel_y_pos,
+                                                                    self.front_wheel.angle - self.prev_front_wheel_angle)
+                    self.prev_front_wheel_x_pos = self.front_wheel.position.x
+                    self.prev_front_wheel_y_pos = self.front_wheel.position.y
+                    self.prev_front_wheel_angle = self.front_wheel.angle
+                    
+                if self.rear_wheel:
+                    print(f"Rear wheel: {self.rear_wheel.position}")
+                    if self.rear_wheel.position.y >= 0:
+                        self.physics_controller.update_element_position("rear_wheel",
+                                                                        self.rear_wheel.position.x - self.prev_rear_wheel_x_pos,
+                                                                        self.rear_wheel.position.y - self.prev_rear_wheel_y_pos,
+                                                                        self.rear_wheel.angle - self.prev_rear_wheel_angle)
+                        self.prev_rear_wheel_x_pos = self.rear_wheel.position.x
+                        self.prev_rear_wheel_y_pos = self.rear_wheel.position.y
+                        self.prev_rear_wheel_angle = self.rear_wheel.angle
 
     @staticmethod
     def convertObjectCoordsTo2DBox(config_box_object):
