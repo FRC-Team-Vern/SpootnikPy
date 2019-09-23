@@ -138,7 +138,7 @@ class PhysicsEngine:
                 # Clear applied body forced. We didn't apply any forced, but you should know about this function.
                 self.world.ClearForces()
 
-                # self.logger.info(f"Position: {self.robot_body.position}, Angle: {self.robot_body.angle}")
+                self.logger.info(f"Position: {self.robot_body.position}, Angle: {self.robot_body.angle}")
 
                 self.physics_controller.distance_drive(self.robot_body.position.x - self.prev_x_pos,
                                                        self.robot_body.position.y - self.prev_y_pos,
@@ -148,7 +148,7 @@ class PhysicsEngine:
                 self.prev_angle = self.robot_body.angle
                 
                 if self.front_wheel:
-                    # print(f"Front wheel: {self.front_wheel.position}")
+                    print(f"Front wheel: {self.front_wheel.position}")
                     self.physics_controller.update_element_position("front_wheel",
                                                                     self.front_wheel.position.x - self.prev_front_wheel_x_pos,
                                                                     self.front_wheel.position.y - self.prev_front_wheel_y_pos,
@@ -158,7 +158,7 @@ class PhysicsEngine:
                     self.prev_front_wheel_angle = self.front_wheel.angle
                     
                 if self.rear_wheel:
-                    print(f"Rear wheel: {self.rear_wheel.position}")
+                    # print(f"Rear wheel: {self.rear_wheel.position}")
                     if self.rear_wheel.position.y >= 0:
                         self.physics_controller.update_element_position("rear_wheel",
                                                                         self.rear_wheel.position.x - self.prev_rear_wheel_x_pos,
